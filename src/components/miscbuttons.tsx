@@ -67,7 +67,7 @@ export function ShowVersion(props: { sz?: string, btn?: MantineNumberSize }) {
     );
 }
 
-export function FontSizeToggle() {
+export function FontSizeToggle(props: { btn?: MantineNumberSize }) {
     const { toggle } = useFontSize();
 
     useHotkeys([
@@ -77,7 +77,7 @@ export function FontSizeToggle() {
     return (
         <ActionIcon
             variant="default"
-            size="lg"
+            size={props.btn}
             onClick={() => { toggle(); }}
             title={`Toggle font size (${modKeyString()} + =)`}
             my="auto"

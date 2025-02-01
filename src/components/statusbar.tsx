@@ -22,7 +22,7 @@ import * as Icon from "react-bootstrap-icons";
 import { Box, Flex, Menu } from "@mantine/core";
 import type { SessionInfo } from "rpc/client";
 import type { Torrent } from "rpc/torrent";
-import { ColorSchemeToggle, ShowVersion } from "components/miscbuttons";
+import { ColorSchemeToggle, FontSizeToggle, ShowVersion } from "components/miscbuttons";
 import { ConfigContext, ServerConfigContext } from "config";
 import { useContextMenu } from "./contextmenu";
 import { MemoSectionsContextMenu, getSectionsMap } from "./sectionscontextmenu";
@@ -150,6 +150,7 @@ export function Statusbar({ session, torrents, filteredTorrents, selectedTorrent
                 <div style={{ flexShrink: 0, display: "flex", order: 100 }}>
                     <ShowVersion sz="0.9rem" btn="md" />
                     <ColorSchemeToggle sz="0.9rem" btn="md" />
+                    <FontSizeToggle btn="md" />
                 </div>}
         </Flex>
     );

@@ -138,7 +138,7 @@ export default function TauriApp() {
                 >
                     <ShowVersion btn="lg" />
                     <ColorSchemeToggle btn="lg" />
-                    <FontSizeToggle />
+                    <FontSizeToggle btn="lg" />
                     <CreateTorrentButton />
                     <ActionIcon
                         size="lg" variant="default" my="auto"
