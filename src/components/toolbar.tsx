@@ -335,7 +335,7 @@ function Toolbar(props: ToolbarProps) {
                 icon={<Icon.Search size="1rem" />}
                 placeholder={`search (${modKeyString()} + f)`}
                 rightSection={<ActionIcon onClick={onSearchClear} title="Clear">
-                    <Icon.XLg size="1rem" color={theme.colors.red[6]} />
+                    <Icon.XLg size="1rem" />
                 </ActionIcon>}
                 onInput={onSearchInput}
                 styles={{ root: { flexGrow: 1 }, input: { height: "auto" } }}
