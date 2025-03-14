@@ -642,7 +642,9 @@ export function DaemonSettingsModal(props: ModalState) {
 
                             {!TAURI && <>
                                 <Tabs.Panel value="interface" pt="md">
-                                    <InterfaceSettigsPanel form={form} />
+                                    <Flex h="100%" gap="0.5rem" mih="28rem">
+                                        <InterfaceSettigsPanel form={form} />
+                                    </Flex>
                                 </Tabs.Panel>
                                 <Tabs.Panel value="magnethandler" pt="md">
                                     <MagnetHandlerPanel />

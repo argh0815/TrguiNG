@@ -373,7 +373,9 @@ export function AppSettingsModal(props: AppSettingsModalProps) {
                     </Tabs.Panel>
 
                     {TAURI && <Tabs.Panel value="interface" pt="md">
-                        <InterfaceSettigsPanel form={form} />
+                        <Flex h="100%" gap="0.5rem" mih="28rem">
+                            <InterfaceSettigsPanel form={form} />
+                        </Flex>
                     </Tabs.Panel>}
                 </Tabs>
             </form>
