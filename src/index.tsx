@@ -78,12 +78,16 @@ function setupTauriEvents(config: Config, app: Root) {
     });
 
     void appWindow.onResized(({ payload: size }) => {
-        config.values.app.window.size = [size.width, size.height];
+        if (size.width > 0 && size.height > 0) {
+            config.values.app.window.size = [size.width, size.height];
+        }
         console.log("Size", size);
     });
 
     void appWindow.onMoved(({ payload: size }) => {
-        config.values.app.window.position = [size.x, size.y];
+        if (size.x > -32000 && size.y > -32000) {
+            config.values.app.window.position = [size.x, size.y];
+        }
         console.log("Position", size);
     });
 }
