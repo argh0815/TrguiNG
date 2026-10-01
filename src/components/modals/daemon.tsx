@@ -93,6 +93,12 @@ function DownloadPanel({ form, session }: { form: UseFormReturnType<FormValues>,
                     {...form.getInputProps("session.download-dir")}
                     autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" />
             </Grid.Col>
+            {session["rpc-version"] as number >= 18 &&
+                <Grid.Col>
+                    <Checkbox
+                        label="Download torrents sequentially"
+                        {...form.getInputProps("session.sequential_download", { type: "checkbox" })} />
+                </Grid.Col>}
             <Grid.Col>
                 <Checkbox
                     label="Add .part extension to incomplete files"

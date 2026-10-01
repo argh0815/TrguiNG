@@ -63,6 +63,7 @@ export interface TorrentAddParams {
     downloadDir: string,
     labels: string[],
     paused: boolean,
+    sequential_download?: boolean,
     priority: PriorityNumberType,
     unwanted?: number[],
 }

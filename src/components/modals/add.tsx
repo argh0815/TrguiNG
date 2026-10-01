@@ -37,12 +37,16 @@ import * as Icon from "react-bootstrap-icons";
 
 const { TAURI, dialogOpen, invoke } = await import(/* webpackChunkName: "taurishim" */"taurishim");
 
+type SequentialAddMode = "daemon" | "on" | "off";
+
 interface AddCommonProps extends React.PropsWithChildren {
     location: LocationData,
     labels: string[],
     setLabels: React.Dispatch<string[]>,
     start: boolean,
     setStart: (b: boolean) => void,
+    sequential: SequentialAddMode,
+    setSequential: (mode: SequentialAddMode) => void,
     priority: PriorityNumberType,
     setPriority: (p: PriorityNumberType) => void,
     disabled?: boolean,
@@ -55,24 +59,40 @@ function AddCommon(props: AddCommonProps) {
         <TorrentLocation {...props.location} inputLabel="Download directory" disabled={props.disabled} />
         {rpcVersion >= 17 &&
             <TorrentLabels labels={props.labels} setLabels={props.setLabels} inputLabel="Labels" disabled={props.disabled} />}
-        <Group>
+        <Group position="apart" align="flex-end" noWrap>
             <Checkbox
                 label="Start torrent"
                 checked={props.start}
                 disabled={props.disabled}
                 onChange={(e) => { props.setStart(e.currentTarget.checked); }}
-                my="xl"
-                styles={{ root: { flexGrow: 1 } }} />
+                mb="sm"
+                sx={{ transform: "translateY(-10px)" }} />
+            {rpcVersion >= 18 &&
+                <Box mt={4} mb="sm">
+                    <Text size="sm" mb={4}>Sequential download</Text>
+                    <SegmentedControl
+                        data={[
+                            { value: "daemon", label: "Daemon" },
+                            { value: "on", label: "On" },
+                            { value: "off", label: "Off" },
+                        ]}
+                        value={props.sequential}
+                        disabled={props.disabled}
+                        onChange={(value) => { props.setSequential(value as SequentialAddMode); }} />
+                </Box>}
             {props.children}
-            <SegmentedControl
-                color={PriorityColors.get(props.priority)}
-                value={String(props.priority)}
-                onChange={(value) => { props.setPriority(+value as PriorityNumberType); }}
-                disabled={props.disabled}
-                data={Array.from(PriorityStrings.entries()).map(([k, v]) => ({
-                    value: String(k),
-                    label: v,
-                }))} />
+            <Box mt={4} mb="sm">
+                <Text size="sm" mb={4}>Priority</Text>
+                <SegmentedControl
+                    color={PriorityColors.get(props.priority)}
+                    value={String(props.priority)}
+                    onChange={(value) => { props.setPriority(+value as PriorityNumberType); }}
+                    disabled={props.disabled}
+                    data={Array.from(PriorityStrings.entries()).map(([k, v]) => ({
+                        value: String(k),
+                        label: v,
+                    }))} />
+            </Box>
         </Group>
     </>;
 }
@@ -84,9 +104,11 @@ interface AddCommonModalProps extends ModalState {
 }
 
 function useCommonProps() {
+    const config = useContext(ConfigContext);
     const location = useTorrentLocation();
     const [labels, setLabels] = useState<string[]>([]);
     const [start, setStart] = useState<boolean>(true);
+    const [sequential, setSequential] = useState<SequentialAddMode>("daemon");
     const [priority, setPriority] = useState<PriorityNumberType>(0);
 
     const props = useMemo<AddCommonProps>(() => ({
@@ -95,16 +117,19 @@ function useCommonProps() {
         setLabels,
         start,
         setStart,
+        sequential,
+        setSequential,
         priority,
         setPriority,
-    }), [location, labels, start, priority]);
+    }), [location, labels, start, sequential, priority]);
 
     return useMemo(() => ({
         location,
         start,
+        sequential,
         priority,
         props,
-    }), [location, priority, props, start]);
+    }), [location, priority, props, sequential, start]);
 }
 
 function TabSwitchDropdown({ tabsRef }: { tabsRef: React.RefObject<ServerTabsRef> }) {
@@ -211,6 +236,7 @@ export function AddMagnet(props: AddCommonModalProps) {
                     downloadDir: common.location.path,
                     labels: common.props.labels,
                     paused: !common.start,
+                    ...(common.sequential === "daemon" ? {} : { sequential_download: common.sequential === "on" }),
                     priority: common.priority,
                 },
             );
@@ -524,6 +550,7 @@ export function AddTorrent(props: AddCommonModalProps) {
                         downloadDir: common.location.path,
                         labels: common.props.labels,
                         paused: !common.start,
+                        ...(common.sequential === "daemon" ? {} : { sequential_download: common.sequential === "on" }),
                         priority: common.priority,
                         unwanted: (td.files == null || torrentData.length > 1) ? undefined : fileTree.getUnwanted(),
                         filePath: td.torrentPath,

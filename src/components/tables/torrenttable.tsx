@@ -105,7 +105,12 @@ const AllFields: readonly TableField[] = [
     },
     { name: "rateDownload", label: "Down speed", component: ByteRateField },
     { name: "rateUpload", label: "Up speed", component: ByteRateField },
-    { name: "status", label: "Status", component: StatusField },
+    {
+        name: "status",
+        label: "Status",
+        component: StatusField,
+        requiredFields: ["status", "sequential_download"],
+    },
     { name: "addedDate", label: "Added on", component: DateField },
     {
         name: "peersSendingToUs",
@@ -302,7 +307,7 @@ export function StatusField(props: TableFieldProps) {
     let status: string = StatusStrings[props.torrent.status];
     if (props.torrent.status === Status.downloading && props.torrent.pieceCount === 0) status = "Magnetizing";
 
-    const sequential = (props.torrent.status === Status.downloading && props.torrent.sequentialDownload === true) ? " sequentially" : "";
+    const sequential = (props.torrent.status === Status.downloading && props.torrent.sequential_download === true) ? " sequentially" : "";
     return <div>{status + sequential}</div>;
 }
 
